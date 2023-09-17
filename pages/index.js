@@ -6,10 +6,12 @@ export default function Home() {
   return (
     <Layout>
       <div className="flex flex-col items-center justify-center mx-32 mt-8">
-        <div className="flex items-center h-12 w-3/4 bg-white rounded-lg p-2 px-5">
-          <p className="font-light">{new Date().toLocaleDateString()}</p>
-          <div className="flex-grow"></div>
-          <p className="font-light">Today's Snapshot</p>
+        <div className="flex flex-col w-3/4 bg-white rounded-lg p-2 px-5">
+          <h1 className="font-semibold text-xl">Server Name</h1>
+          <p className="text-sm text-gray-500 mb-1">192.168.1.1:3306</p>
+          <p className="text-sm text-gray-500">Tracking <span className="font-medium">3</span> databases</p>
+          <p className="text-sm text-gray-500">Server Status: <span className="text-green-500">Online</span></p>
+          <p className="text-sm text-gray-500">Backup Status: <span className="text-green-500">Backup Completed</span></p>
         </div>
       </div>
     </Layout>

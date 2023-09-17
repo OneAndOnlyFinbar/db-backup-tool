@@ -9,7 +9,7 @@ export default function Navigation(props) {
   return (
     <div className={`flex flex-row items-center justify-between p-4 pt-8 mx-16 ${inter.className}`}>
       <div className="flex flex-row items-center gap-x-8">
-        <p className="text-xl cursor-pointer font-light duration-100 hover:scale-[101%]">Snapshots</p>
+        <p className="text-xl cursor-pointer font-light duration-100 hover:scale-[101%]">Databases</p>
         <p className="text-xl cursor-pointer font-light duration-100 hover:scale-[101%]">Routines</p>
         <p className="text-xl cursor-pointer font-light duration-100 hover:scale-[101%]">User Management</p>
       </div>
