@@ -2,15 +2,22 @@ import { getSession } from 'next-auth/react';
 import Server from '@/lib/db/server';
 const net = require('net');
 
+let serverCache = {};
+const cacheTTL = 30_000;
+let lastCacheHit = null;
+
 export default async (req, res) => {
   const session = await getSession({ req });
 
-  if (!session) {
+  if (!session)
     return res.status(401).json({ error: 'Unauthorized' });
-  }
 
-  const servers = await Server.findAll();
-  const results = [];
+  const servers = await Server.findAll()
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).json({ error: 'Internal database error' });
+    })
+  let results = [];
 
   const connectToServer = (server) => {
     return new Promise((resolve) => {
@@ -47,7 +54,14 @@ export default async (req, res) => {
     });
   };
 
+  if(lastCacheHit && Date.now() - lastCacheHit < cacheTTL) {
+    return res.status(200).json(serverCache);
+  }
+
   await Promise.all(servers.map(connectToServer));
+
+  lastCacheHit = Date.now();
+  serverCache = results;
 
   return res.status(200).json(results);
 }
