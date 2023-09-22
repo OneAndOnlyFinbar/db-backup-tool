@@ -2,7 +2,7 @@ import { getSession } from 'next-auth/react';
 import Server from '@/lib/db/server';
 const net = require('net');
 
-let serverCache = {};
+export let serverCache = {};
 const cacheTTL = 30_000;
 let lastCacheHit = null;
 
@@ -54,9 +54,8 @@ export default async (req, res) => {
     });
   };
 
-  if(lastCacheHit && Date.now() - lastCacheHit < cacheTTL) {
+  if(lastCacheHit && Date.now() - lastCacheHit < cacheTTL)
     return res.status(200).json(serverCache);
-  }
 
   await Promise.all(servers.map(connectToServer));
 
