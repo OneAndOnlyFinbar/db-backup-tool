@@ -1,20 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getSession } from 'next-auth/react';
 import Layout from '@/components/Layout';
 
-export default function Server() {
-  const [tracked, setTracked] = useState([{
-    id: 1,
-    name: 'ProductionDB',
-    retentionValue: 1,
-    retentionUnit: 'week',
-    frequencyValue: 1,
-    frequencyUnit: 'day'
-  }]);
-  const [untracked, setUntracked] = useState([{
-    id: 1,
-    name: 'DevelopmentDB'
-  }]);
+export default function Server(props) {
+  const [tracked, setTracked] = useState([]);
+  const [untracked, setUntracked] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingError, setLoadingError] = useState(null);
+
+  useEffect(() => {
+    return () => {
+      fetch(`/api/servers/${props.serverId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.error)
+            setLoadingError(data.error);
+          else {
+            setTracked(data.databases.filter(db => db.tracked));
+            setUntracked(data.databases.filter(db => !db.tracked));
+          }
+          setLoading(false);
+        });
+    };
+  }, []);
 
   const Database = ({ database, index }) => {
     const [editing, setEditing] = useState(false);
@@ -54,7 +62,8 @@ export default function Server() {
               </select>
             </div>
           )
-          : <span className="font-semibold">every {frequency != 1 && frequency} {frequencyUnit}{frequency != 1 && 's'}</span>
+          :
+          <span className="font-semibold">every {frequency != 1 && frequency} {frequencyUnit}{frequency != 1 && 's'}</span>
         }</p>
         <p className="text-sm text-gray-500">Last backup: <span className="font-semibold">1 hour ago</span></p>
         <p className="text-sm text-gray-500">Current Status: <span className="font-semibold text-green-500">Backup Completed</span>
@@ -81,24 +90,32 @@ export default function Server() {
     <Layout>
       <title>Server</title>
       <div className="flex flex-col w-[1000px] mt-8 mx-auto">
-        <h1 className="text-2xl font-light select-none">Tracked Databases</h1>
+        {tracked.length > 0 && (
+          <>
+            <h1 className="text-2xl font-light select-none">Tracked Databases</h1>
 
-        {tracked.map((database, index) => (
-          <Database database={database} index={index} key={index}/>
-        ))}
+            {tracked.map((database, index) => (
+              <Database database={database} index={index} key={index}/>
+            ))}
+          </>
+        )}
 
-        <h1 className="text-2xl font-light select-none mt-4">Untracked Databases</h1>
+        {untracked.length > 0 && (
+          <>
+            <h1 className="text-2xl font-light select-none mt-4">Untracked Databases</h1>
 
-        {untracked.map((database, index) => (
-          <div className="flex flex-col w-full bg-white rounded-lg p-2 px-5 shadow-sm mt-2" key={index}>
-            <h1 className="font-semibold text-xl">{database.name}</h1>
-            <p className="text-sm text-gray-500"><span className="font-medium">3</span> tables</p>
-            <div className="h-px bg-gray-200 my-2"></div>
-            <div className="flex flex-row items-center gap-x-2 mb-1">
-              <p className="text-gray-500 hover:underline cursor-pointer">Start Tracking</p>
-            </div>
-          </div>
-        ))}
+            {untracked.map((database, index) => (
+              <div className="flex flex-col w-full bg-white rounded-lg p-2 px-5 shadow-sm mt-2" key={index}>
+                <h1 className="font-semibold text-xl">{database.name}</h1>
+                <p className="text-sm text-gray-500"><span className="font-medium">3</span> tables</p>
+                <div className="h-px bg-gray-200 my-2"></div>
+                <div className="flex flex-row items-center gap-x-2 mb-1">
+                  <p className="text-gray-500 hover:underline cursor-pointer">Start Tracking</p>
+                </div>
+              </div>
+            ))}
+          </>
+        )}
       </div>
     </Layout>
   )
@@ -116,7 +133,19 @@ export async function getServerSideProps(context) {
     }
   }
 
+  const { serverId } = context.query;
+
+  if (!serverId)
+    return {
+      redirect: {
+        destination: '/servers',
+        permanent: false
+      }
+    }
+
   return {
-    props: {}
+    props: {
+      serverId
+    }
   }
 }
