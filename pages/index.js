@@ -27,7 +27,7 @@ export default function Servers() {
     <Layout>
       <title>Database Servers</title>
       <div className="flex flex-col gap-y-6 items-center justify-center mx-32 mt-8">
-        {loading && <p className="text-gray-500 text-lg">Loading...</p>}
+        {loading ? <p className="text-gray-500 text-lg">Loading...</p> : <h1 className="text-2xl font-light select-none">Servers</h1>}
         {loadingError && <p className="text-red-500 text-lg">Error loading servers: {loadingError}</p>}
         {servers?.map((server, index) => (
           <Link href={`/server/${server.id}`} className="flex flex-col w-3/4 bg-white rounded-lg p-2 px-5 shadow-sm hover:shadow-md transition duration-200 ease-in-out">
@@ -38,6 +38,9 @@ export default function Servers() {
             <p className="text-sm text-gray-500">Backup Status: <span className="text-green-500">Backup Completed</span></p>
           </Link>
         ))}
+        <Link href="/server/add" className="flex flex-col w-3/4 bg-white rounded-lg p-2 px-5 shadow-sm hover:shadow-md transition duration-200 ease-in-out">
+          <h1 className="font-light text-xl text-center">Add Server</h1>
+        </Link>
       </div>
     </Layout>
   )
