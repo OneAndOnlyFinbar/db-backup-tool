@@ -5,6 +5,16 @@ import { Server, Database } from '@/lib/db';
 export default async (req, res) => {
   const { name, serverIp, serverUsername, serverPassword, mysqlUsername, mysqlPassword, mysqlPort } = JSON.parse(req.body);
 
+  const duplicate = await Server.findOne({
+    where: {
+      ip: serverIp,
+      port: mysqlPort
+    }
+  });
+
+  if (duplicate)
+    return res.status(400).json({ error: 'Server already exists' });
+
   if (!serverIp || !serverUsername || !serverPassword || !mysqlUsername || !mysqlPort)
     return res.status(400).json({ error: 'Missing required fields' });
 
