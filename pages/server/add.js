@@ -4,6 +4,7 @@ import Layout from '@/components/Layout';
 
 export default function Servers() {
   const addServerButtonRef = useRef(null);
+  const [connectionStatus, setConnectionStatus] = useState(null);
 
   const nameRef = useRef(null);
   const [nameError, setNameError] = useState(null);
@@ -71,6 +72,25 @@ export default function Servers() {
     addServerButtonRef.current.disabled = !isFormValid;
   }
 
+  const testConnection = () => {
+    setConnectionStatus('Testing connection...');
+    fetch('/api/servers/test-connection', {
+      method: 'POST',
+      body: JSON.stringify({
+        serverIp: ipRef.current.value,
+        serverUsername: sshUsernameRef.current.value,
+        serverPassword: sshPasswordRef.current.value,
+        mysqlUsername: mysqlUsernameRef.current.value,
+        mysqlPassword: mysqlPasswordRef.current.value,
+        mysqlPort: portRef.current.value
+      })
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setConnectionStatus(data.error ? data.error : `SSH Connection: ${data.sshConnection ? 'Success' : 'Failed'} | MySQL Connection: ${data.mysqlConnection ? 'Success' : 'Failed'}`);
+      })
+  }
+
   return (
     <Layout>
       <title>Add Database Server</title>
@@ -107,11 +127,13 @@ export default function Servers() {
         </div>
 
         <div className="flex flex-row justify-end gap-x-4 mt-6">
-          <button className="bg-white px-4 py-2 rounded-md hover:scale-101 duration-100">Test Connection</button>
+          <button className="bg-white px-4 py-2 rounded-md hover:scale-101 duration-100" onClick={testConnection}>Test Connection</button>
           <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:scale-101 disabled:hover:scale-100 duration-100 disabled:cursor-not-allowed disabled:opacity-75" ref={addServerButtonRef} disabled={true}>Add
             Server
           </button>
         </div>
+
+        {connectionStatus && <p className="text-gray-700 font-semibold flex justify-end mt-4">{connectionStatus}</p>}
       </div>
     </Layout>
   )

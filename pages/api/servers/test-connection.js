@@ -2,23 +2,36 @@ import { Sequelize } from 'sequelize';
 import { Client } from 'ssh2';
 
 export default async (req, res) => {
-  const { serverIp, serverUsername, serverPassword, mysqlUsername, mysqlPassword, mysqlPort } = req.body;
+  const { serverIp, serverUsername, serverPassword, mysqlUsername, mysqlPassword, mysqlPort } = JSON.parse(req.body);
+
+  if (!serverIp || !serverUsername || !serverPassword || !mysqlUsername || !mysqlPassword || !mysqlPort)
+    return res.status(400).json({ error: 'Missing required fields' });
 
   let sshConnection = false;
   let mysqlConnection = false;
 
-  const ssh = new Client();
-
   await new Promise((resolve) => {
-    ssh.on('ready', () => {
-      sshConnection = true;
-      ssh.end();
+    try {
+      const ssh = new Client();
+
+      ssh.on('ready', () => {
+        sshConnection = true;
+        ssh.end();
+        resolve();
+      });
+
+      ssh.on('error', () => {
+        resolve();
+      });
+
+      ssh.connect({
+        host: serverIp,
+        username: serverUsername,
+        password: serverPassword
+      });
+    } catch {
       resolve();
-    }).connect({
-      host: serverIp,
-      username: serverUsername,
-      password: serverPassword
-    })
+    }
   });
 
   await new Promise(async (resolve) => {
@@ -37,7 +50,7 @@ export default async (req, res) => {
       await sequelize.close();
 
       resolve();
-    } catch (error) {
+    } catch {
       resolve();
     }
   })
