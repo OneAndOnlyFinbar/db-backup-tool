@@ -68,7 +68,6 @@ export default function Servers() {
       [nameError, ipError, portError, sshUsernameError, sshPasswordError, mysqlUsernameError, mysqlPasswordError].every((error) => error === null) &&
       [nameRef, ipRef, portRef, sshUsernameRef, sshPasswordRef, mysqlUsernameRef, mysqlPasswordRef].every((ref) => ref.current.value.length > 0);
 
-    // Enable or disable the button based on the form validity
     addServerButtonRef.current.disabled = !isFormValid;
   }
 
