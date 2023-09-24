@@ -4,7 +4,7 @@ import { Client } from 'ssh2';
 export default async (req, res) => {
   const { serverIp, serverUsername, serverPassword, mysqlUsername, mysqlPassword, mysqlPort } = JSON.parse(req.body);
 
-  if (!serverIp || !serverUsername || !serverPassword || !mysqlUsername || !mysqlPassword || !mysqlPort)
+  if (!serverIp || !serverUsername || !serverPassword || !mysqlUsername || !mysqlPort)
     return res.status(400).json({ error: 'Missing required fields' });
 
   let sshConnection = false;

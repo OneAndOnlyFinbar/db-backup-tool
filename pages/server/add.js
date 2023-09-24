@@ -25,7 +25,6 @@ export default function Servers() {
   const [mysqlUsernameError, setMysqlUsernameError] = useState(null);
 
   const mysqlPasswordRef = useRef(null);
-  const [mysqlPasswordError, setMysqlPasswordError] = useState(null);
 
   const validateInputs = (attr) => {
     if ((nameRef.current.value.length === 0 || nameRef.current.value.length > 255) && attr === 'name')
@@ -60,13 +59,8 @@ export default function Servers() {
     else if (attr === 'mysqlUsername')
       setMysqlUsernameError(null);
 
-    if ((mysqlPasswordRef.current.value.length === 0) && attr === 'mysqlPassword')
-      setMysqlPasswordError('MySQL password cannot be empty');
-    else if (attr === 'mysqlPassword')
-      setMysqlPasswordError(null);
-
     const isFormValid =
-      [nameError, ipError, portError, sshUsernameError, sshPasswordError, mysqlUsernameError, mysqlPasswordError].every((error) => error === null) &&
+      [nameError, ipError, portError, sshUsernameError, sshPasswordError, mysqlUsernameError].every((error) => error === null) &&
       [nameRef, ipRef, portRef, sshUsernameRef, sshPasswordRef, mysqlUsernameRef, mysqlPasswordRef].every((ref) => ref.current.value.length > 0);
 
     addServerButtonRef.current.disabled = !isFormValid;
@@ -81,7 +75,7 @@ export default function Servers() {
         serverUsername: sshUsernameRef.current.value,
         serverPassword: sshPasswordRef.current.value,
         mysqlUsername: mysqlUsernameRef.current.value,
-        mysqlPassword: mysqlPasswordRef.current.value,
+        mysqlPassword: mysqlPasswordRef.current.value || null,
         mysqlPort: portRef.current.value
       })
     })
@@ -123,7 +117,6 @@ export default function Servers() {
 
           <p className="text-gray-700 text-lg font-semibold mt-2">MySQL Password</p>
           <input type="text" className="py-2 px-4 outline-0" placeholder="MySQL Password" ref={mysqlPasswordRef} onChange={() => validateInputs('mysqlPassword')}/>
-          {mysqlPasswordError && <p className="text-red-500 text-sm">{mysqlPasswordError}</p>}
         </div>
 
         <div className="flex flex-row justify-end gap-x-4 mt-6">
