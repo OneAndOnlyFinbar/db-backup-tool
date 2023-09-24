@@ -1,8 +1,11 @@
 import { getSession } from 'next-auth/react';
 import { useState, useRef } from 'react';
+import { useRouter } from 'next/router';
 import Layout from '@/components/Layout';
 
 export default function Servers() {
+  const router = useRouter();
+
   const addServerButtonRef = useRef(null);
   const [connectionStatus, setConnectionStatus] = useState(null);
 
@@ -99,11 +102,12 @@ export default function Servers() {
       })
     })
       .then((response) => response.json())
-      .then((data) => {
+      .then(async (data) => {
         if (data.error) {
           setConnectionStatus(data.error);
         } else {
           setConnectionStatus('Server added successfully');
+          await router.push(`/server/${data.serverId}`);
         }
       })
   }

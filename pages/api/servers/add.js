@@ -87,6 +87,7 @@ export default async (req, res) => {
   }));
 
   res.status(200).json({
-    status: true
+    status: true,
+    id: server.id
   })
 }
