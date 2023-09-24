@@ -135,7 +135,7 @@ export default function Servers() {
           {sshUsernameError && <p className="text-red-500 text-sm">{sshUsernameError}</p>}
 
           <p className="text-gray-700 text-lg font-semibold mt-2">SSH Password</p>
-          <input type="text" className="py-2 px-4 outline-0" placeholder="SSH Password" ref={sshPasswordRef} onChange={() => validateInputs('sshPassword')}/>
+          <input type="password" className="py-2 px-4 outline-0" placeholder="SSH Password" ref={sshPasswordRef} onChange={() => validateInputs('sshPassword')}/>
           {sshPasswordError && <p className="text-red-500 text-sm">{sshPasswordError}</p>}
 
           <p className="text-gray-700 text-lg font-semibold mt-6">MySQL Username</p>
@@ -143,7 +143,7 @@ export default function Servers() {
           {mysqlUsernameError && <p className="text-red-500 text-sm">{mysqlUsernameError}</p>}
 
           <p className="text-gray-700 text-lg font-semibold mt-2">MySQL Password</p>
-          <input type="text" className="py-2 px-4 outline-0" placeholder="MySQL Password" ref={mysqlPasswordRef} onChange={() => validateInputs('mysqlPassword')}/>
+          <input type="password" className="py-2 px-4 outline-0" placeholder="MySQL Password" ref={mysqlPasswordRef} onChange={() => validateInputs('mysqlPassword')}/>
         </div>
 
         <div className="flex flex-row justify-end gap-x-4 mt-6">
