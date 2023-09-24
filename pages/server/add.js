@@ -107,7 +107,7 @@ export default function Servers() {
           setConnectionStatus(data.error);
         } else {
           setConnectionStatus('Server added successfully');
-          await router.push(`/server/${data.serverId}`);
+          await router.push(`/server/${data.id}`);
         }
       })
   }
