@@ -10,18 +10,17 @@ export default async (req, res) => {
   let server = await Server.findOne({
     where: {
       id: req.query.id
-    },
-    include: [
-      {
-        model: Database,
-        required: false,
-        as: 'databases',
-      }
-    ]
+    }
   });
 
   if(!server)
     return res.status(404).json({ error: 'Server not found' });
 
-  return res.status(200).json(server);
+  const databases = await Database.findAll({
+    where: {
+      serverId: server.id
+    }
+  });
+
+  return res.status(200).json({ ...server, databases });
 }

@@ -85,6 +85,29 @@ export default function Servers() {
       })
   }
 
+  const addServer = () => {
+    fetch('/api/servers/add', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: nameRef.current.value,
+        serverIp: ipRef.current.value,
+        serverUsername: sshUsernameRef.current.value,
+        serverPassword: sshPasswordRef.current.value,
+        mysqlUsername: mysqlUsernameRef.current.value,
+        mysqlPassword: mysqlPasswordRef.current.value || null,
+        mysqlPort: portRef.current.value
+      })
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          setConnectionStatus(data.error);
+        } else {
+          setConnectionStatus('Server added successfully');
+        }
+      })
+  }
+
   return (
     <Layout>
       <title>Add Database Server</title>
@@ -121,8 +144,8 @@ export default function Servers() {
 
         <div className="flex flex-row justify-end gap-x-4 mt-6">
           <button className="bg-white px-4 py-2 rounded-md hover:scale-101 duration-100" onClick={testConnection}>Test Connection</button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:scale-101 disabled:hover:scale-100 duration-100 disabled:cursor-not-allowed disabled:opacity-75" ref={addServerButtonRef} disabled={true}>Add
-            Server
+          <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:scale-101 disabled:hover:scale-100 duration-100 disabled:cursor-not-allowed disabled:opacity-75" ref={addServerButtonRef} onClick={addServer}>
+            Add Server
           </button>
         </div>
 
