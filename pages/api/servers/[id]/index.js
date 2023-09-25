@@ -26,5 +26,17 @@ export default async (req, res) => {
 
       return res.status(200).json({ ...server, databases });
     }
+    case 'PATCH': {
+      const { tracked } = req.body;
+
+      if (typeof tracked !== 'boolean')
+        return res.status(400).json({ error: 'Invalid track value' });
+
+      const updatedServer = await server.update({
+        tracked
+      })
+
+      return res.status(200).json(updatedServer);
+    }
   }
 }
