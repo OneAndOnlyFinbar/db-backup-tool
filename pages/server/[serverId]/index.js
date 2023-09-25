@@ -10,7 +10,9 @@ export default function Server(props) {
 
   useEffect(() => {
     return () => {
-      fetch(`/api/servers/${props.serverId}`)
+      fetch(`/api/servers/${props.serverId}`, {
+        method: 'GET'
+      })
         .then((res) => res.json())
         .then((data) => {
           if (data.error)

@@ -16,11 +16,15 @@ export default async (req, res) => {
   if(!server)
     return res.status(404).json({ error: 'Server not found' });
 
-  const databases = await Database.findAll({
-    where: {
-      serverId: server.id
-    }
-  });
+  switch(req.method) {
+    case 'GET': {
+      const databases = await Database.findAll({
+        where: {
+          serverId: server.id
+        }
+      });
 
-  return res.status(200).json({ ...server, databases });
+      return res.status(200).json({ ...server, databases });
+    }
+  }
 }
