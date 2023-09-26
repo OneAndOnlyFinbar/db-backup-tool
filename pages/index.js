@@ -29,7 +29,7 @@ export default function Servers() {
       <div className="flex flex-col gap-y-6 items-center justify-center mx-32 mt-8">
         {loading ? <p className="text-gray-500 text-lg">Loading...</p> : <h1 className="text-2xl font-light select-none">Servers</h1>}
         {loadingError && <h1 className="text-red-500 text-2xl font-light select-none">Error loading servers: {loadingError}</h1>}
-        {(!loading && servers?.length === 0) && <h1 className="text-2xl font-light select-none">No servers added.</h1>}
+        {(!loading && !loadingError && servers?.length === 0) && <h1 className="text-2xl font-light select-none">No servers added.</h1>}
         {servers?.map((server, index) => (
           <Link href={`/server/${server.id}`} className="flex flex-col w-3/4 bg-white rounded-lg p-2 px-5 shadow-sm hover:shadow-md transition duration-200 ease-in-out">
             <h1 className="font-semibold text-xl">{server.name}</h1>
