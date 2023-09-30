@@ -33,7 +33,7 @@ export default async (req, res) => {
         case 'track': {
           const { tracked, databaseName } = data;
 
-          if (!tracked || typeof tracked !== 'boolean')
+          if (typeof tracked !== 'boolean')
             return res.status(400).json({ error: 'Invalid track value' });
 
           if (!databaseName || typeof databaseName !== 'string')

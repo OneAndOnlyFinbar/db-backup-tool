@@ -26,12 +26,34 @@ export default function Server(props) {
     };
   }, []);
 
-  const Database = ({ database, index }) => {
+  const TrackedDatabase = ({ database, index }) => {
     const [editing, setEditing] = useState(false);
     const [retention, setRetention] = useState(database.retentionValue);
     const [retentionUnit, setRetentionUnit] = useState(database.retentionUnit);
     const [frequency, setFrequency] = useState(database.frequencyValue);
     const [frequencyUnit, setFrequencyUnit] = useState(database.frequencyUnit);
+
+    const unTrack = () => {
+      fetch(`/api/servers/${props.serverId}`, {
+        method: 'POST',
+        body: JSON.stringify({
+          op: 'track',
+          data: {
+            tracked: false,
+            databaseName: database.name
+          }
+        })
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.error)
+            setLoadingError(data.error);
+          else {
+            setUntracked([...untracked, database]);
+            setTracked(tracked.filter(db => db.name !== database.name));
+          }
+        });
+    }
 
     return (
       <div className="flex flex-col w-full bg-white rounded-lg p-2 px-5 shadow-sm mt-2" key={index}>
@@ -82,7 +104,7 @@ export default function Server(props) {
           <p className="text-gray-200 select-none">|</p>
           <p className="text-gray-500 hover:underline cursor-pointer" onClick={() => setEditing(!editing)}>{editing ? 'Save' : 'Edit'}</p>
           <p className="text-gray-200 select-none">|</p>
-          <p className="text-red-500 hover:underline cursor-pointer">Untrack</p>
+          <p className="text-red-500 hover:underline cursor-pointer" onClick={unTrack}>Untrack</p>
         </div>
       </div>
     )
@@ -131,7 +153,7 @@ export default function Server(props) {
             <h1 className="text-2xl font-light select-none">Tracked Databases</h1>
 
             {tracked.map((database, index) => (
-              <Database database={database} index={index} key={index}/>
+              <TrackedDatabase database={database} index={index} key={index}/>
             ))}
           </>
         )}
