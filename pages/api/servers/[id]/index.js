@@ -26,17 +26,45 @@ export default async (req, res) => {
 
       return res.status(200).json({ ...server, databases });
     }
-    case 'PATCH': {
-      const { tracked } = req.body;
+    case 'POST': {
+      const { op, data } = JSON.parse(req.body);
 
-      if (typeof tracked !== 'boolean')
-        return res.status(400).json({ error: 'Invalid track value' });
+      switch(op) {
+        case 'track': {
+          const { tracked, databaseName } = data;
 
-      const updatedServer = await server.update({
-        tracked
-      })
+          if (!tracked || typeof tracked !== 'boolean')
+            return res.status(400).json({ error: 'Invalid track value' });
 
-      return res.status(200).json(updatedServer);
+          if (!databaseName || typeof databaseName !== 'string')
+            return res.status(400).json({ error: 'Invalid databaseName value' });
+
+          const database = await Database.findOne({
+            where: {
+              serverId: server.id,
+              name: databaseName
+            }
+          });
+
+          if (!database)
+            return res.status(404).json({ error: 'Database not found' });
+
+          if (database.serverId !== server.id)
+            return res.status(400).json({ error: 'Database does not belong to this server' });
+
+          const updatedDatabase = await database.update({
+            tracked
+          });
+
+          return res.status(200).json(updatedDatabase);
+        }
+        default: {
+          return res.status(400).json({ error: 'Invalid op value' });
+        }
+      }
+    }
+    default: {
+      return res.status(405).json({ error: 'Method not allowed' });
     }
   }
 }
