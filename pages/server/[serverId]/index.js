@@ -106,7 +106,7 @@ export default function Server(props) {
             setLoadingError(data.error);
           else {
             setTracked([...tracked, database]);
-            setUntracked(untracked.filter(db => db.id !== database.id));
+            setUntracked(untracked.filter(db => db.name !== database.name));
           }
         });
     }
