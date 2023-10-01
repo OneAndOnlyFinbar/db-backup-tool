@@ -28,10 +28,10 @@ export default function Server(props) {
 
   const TrackedDatabase = ({ database, index }) => {
     const [editing, setEditing] = useState(false);
-    const [retention, setRetention] = useState(database.retentionValue);
+    const [retention, setRetention] = useState(database.retentionPeriod);
     const [retentionUnit, setRetentionUnit] = useState(database.retentionUnit);
-    const [frequency, setFrequency] = useState(database.frequencyValue);
-    const [frequencyUnit, setFrequencyUnit] = useState(database.frequencyUnit);
+    const [frequency, setFrequency] = useState(database.backupFrequency);
+    const [frequencyUnit, setFrequencyUnit] = useState(database.backupUnit);
 
     const unTrack = () => {
       fetch(`/api/servers/${props.serverId}`, {
