@@ -90,9 +90,9 @@ export default async (req, res) => {
       serverId: server.id,
       tracked: 0,
       retentionPeriod: 7,
-      retentionUnit: 'day',
+      retentionPeriodUnit: 'day',
       backupFrequency: 1,
-      backupUnit: 'day',
+      backupFrequencyUnit: 'day',
       lastBackup: null,
       tableCount: database.table_count
     })
