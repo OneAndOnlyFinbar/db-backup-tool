@@ -29,7 +29,7 @@ export default function Server(props) {
   const TrackedDatabase = ({ database, index }) => {
     const [editing, setEditing] = useState(false);
     const [retention, setRetention] = useState(database.retentionPeriod);
-    const [retentionUnit, setRetentionUnit] = useState(database.retentionPeriodFrequency);
+    const [retentionUnit, setRetentionUnit] = useState(database.retentionPeriodUnit);
     const [frequency, setFrequency] = useState(database.backupFrequency);
     const [frequencyUnit, setFrequencyUnit] = useState(database.backupFrequencyUnit);
 
