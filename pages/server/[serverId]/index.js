@@ -58,7 +58,7 @@ export default function Server(props) {
     return (
       <div className="flex flex-col w-full bg-white rounded-lg p-2 px-5 shadow-sm mt-2" key={index}>
         <h1 className="font-semibold text-xl">{database.name}</h1>
-        <p className="text-sm text-gray-500"><span className="font-semibold">3</span> tables</p>
+        <p className="text-sm text-gray-500"><span className="font-semibold">{database.tableCount}</span> tables</p>
         <p className="text-sm text-gray-500"><span className="font-semibold">7</span> backups</p>
         <p className="text-sm text-gray-500 flex flex-row gap-x-1 items-center">Retention Period: {editing
           ? (
