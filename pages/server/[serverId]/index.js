@@ -32,13 +32,10 @@ export default function Server(props) {
     <Layout>
       <title>Server</title>
       <div className="flex flex-col w-[1000px] mt-8 mx-auto">
-        {loading && (
-          <h1 className="text-2xl font-light select-none self-center">Loading...</h1>
-        )}
+        {loading && <h1 className="text-2xl font-light select-none self-center">Loading...</h1>}
 
-        {loadingError && (
-          <h1 className="text-red-500 text-2xl font-light select-none self-center">Error loading databases: {loadingError}</h1>
-        )}
+        {loadingError && <h1 className="text-red-500 text-2xl font-light select-none self-center">Error loading
+          databases: {loadingError}</h1>}
 
         {tracked.length > 0 && (
           <>
