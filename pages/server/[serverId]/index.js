@@ -46,9 +46,7 @@ export default function Server(props) {
       })
         .then((res) => res.json())
         .then((data) => {
-          if (data.error)
-            setLoadingError(data.error);
-          else {
+          if (!data.error) {
             setUntracked([...untracked, database]);
             setTracked(tracked.filter(db => db.name !== database.name));
           }
@@ -124,9 +122,7 @@ export default function Server(props) {
       })
         .then((res) => res.json())
         .then((data) => {
-          if (data.error)
-            setLoadingError(data.error);
-          else {
+          if (!data.error) {
             setTracked([...tracked, database]);
             setUntracked(untracked.filter(db => db.name !== database.name));
           }
@@ -148,6 +144,14 @@ export default function Server(props) {
     <Layout>
       <title>Server</title>
       <div className="flex flex-col w-[1000px] mt-8 mx-auto">
+        {loading && (
+          <h1 className="text-2xl font-light select-none self-center">Loading...</h1>
+        )}
+
+        {loadingError && (
+          <h1 className="text-red-500 text-2xl font-light select-none self-center">Error loading databases: {loadingError}</h1>
+        )}
+
         {tracked.length > 0 && (
           <>
             <h1 className="text-2xl font-light select-none">Tracked Databases</h1>
