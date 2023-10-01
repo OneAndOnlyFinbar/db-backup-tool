@@ -24,7 +24,7 @@ export default async (req, res) => {
         }
       });
 
-      return res.status(200).json({ ...server, databases });
+      return res.status(200).json({ server, databases });
     }
     case 'POST': {
       const { op, data } = JSON.parse(req.body);
