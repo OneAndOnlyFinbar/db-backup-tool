@@ -15,7 +15,7 @@ export default function Navigation(props) {
 
   return (
     width > 768 ? (
-      <div className="flex flex-row items-center justify-between p-4 pt-8 mx-16">
+      <div className="flex flex-row items-center justify-between p-4 pt-8 mx-16 mb-4">
         <div className="flex flex-row items-center gap-x-8">
           <Link href="/" className="text-xl cursor-pointer font-light duration-100 hover:scale-[101%]">Servers</Link>
           <p className="text-xl cursor-pointer font-light duration-100 hover:scale-[101%]">User Management</p>
@@ -24,8 +24,9 @@ export default function Navigation(props) {
       </div>
     ) : (
       <div>
-        <div className="w-screen px-4 pt-4 mb-2">
+        <div className="flex flex-row justify-between w-screen px-4 pt-4 mb-4">
           <FaBars className="text-2xl cursor-pointer" onClick={() => setOpen(!open)}/>
+          {session && <p>Signed in as <span className="font-semibold">{session.user.name}</span></p>}
         </div>
         {open && (
           <div className="flex flex-col justify-center w-screen px-4 mb-4">
