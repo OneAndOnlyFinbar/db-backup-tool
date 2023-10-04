@@ -115,7 +115,7 @@ export default function Servers() {
   return (
     <Layout>
       <title>Add Database Server</title>
-      <div className="flex flex-col w-[1000px] mt-8 mx-auto pb-12">
+      <div className="flex flex-col mx-4 pb-12 md:mx-auto md:max-w-[1000px] w-3/4">
         <h1 className="text-2xl font-light select-none">Add Database Server</h1>
         <div className="flex flex-col gap-y-1">
           <p className="text-gray-700 text-lg font-semibold mt-2">Server Name</p>

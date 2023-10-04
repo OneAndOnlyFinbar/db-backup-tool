@@ -26,7 +26,7 @@ export default function Servers() {
   return (
     <Layout>
       <title>Database Servers</title>
-      <div className="flex flex-col gap-y-6 items-center justify-center mx-32 mt-8">
+      <div className="flex flex-col gap-y-6 items-center justify-center md:mx-32">
         {loading ? <p className="text-gray-500 text-lg">Loading...</p> : <h1 className="text-2xl font-light select-none">Servers</h1>}
         {loadingError && <h1 className="text-red-500 text-2xl font-light select-none">Error loading servers: {loadingError}</h1>}
         {(!loading && !loadingError && servers?.length === 0) && <h1 className="text-2xl font-light select-none">No servers added.</h1>}
