@@ -24,7 +24,7 @@ export default function Navigation(props) {
       </div>
     ) : (
       <div>
-        <div className="w-screen px-4 mt-4 mb-2">
+        <div className="w-screen px-4 pt-4 mb-2">
           <FaBars className="text-2xl cursor-pointer" onClick={() => setOpen(!open)}/>
         </div>
         {open && (

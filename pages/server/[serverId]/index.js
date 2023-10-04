@@ -31,7 +31,7 @@ export default function Server(props) {
   return (
     <Layout>
       <title>Server</title>
-      <div className="flex flex-col mx-4 pb-12 md:mx-auto md:max-w-[1000px] w-3/4">
+      <div className="flex flex-col pb-12 mx-auto md:max-w-[1000px] w-3/4">
         {loading && <h1 className="text-2xl font-light select-none self-center">Loading...</h1>}
 
         {loadingError && <h1 className="text-red-500 text-2xl font-light select-none self-center">Error loading
