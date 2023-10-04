@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { data } from "autoprefixer";
+import Link from "next/link";
 
 export default function TrackedDatabase({ database, index, setUntracked, setTracked, untracked, tracked }) {
   const [editing, setEditing] = useState(false);
@@ -110,7 +111,7 @@ export default function TrackedDatabase({ database, index, setUntracked, setTrac
       <div className="flex flex-col md:flex-row items-center gap-x-2 mb-1">
         <p className="text-gray-500 hover:underline cursor-pointer">Backup Now</p>
         <p className="text-gray-200 select-none hidden md:block">|</p>
-        <p className="text-gray-500 hover:underline cursor-pointer">View Backups</p>
+        <Link className="text-gray-500 hover:underline cursor-pointer" href={`/server/${database.serverId}/backups`}>View Backups</Link>
         <p className="text-gray-200 select-none hidden md:block">|</p>
         <p className="text-gray-500 hover:underline cursor-pointer" onClick={() => editing ? save() : setEditing(!editing)}>{editing ? "Save" : "Edit"}</p>
         <p className="text-gray-200 select-none hidden md:block">|</p>
