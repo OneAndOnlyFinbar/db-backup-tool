@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react';
 import { getSession } from 'next-auth/react';
 import Layout from '@/components/Layout';
+import Backup from "@/components/pages/server/backups/Backup";
 
 export default function Backups(props) {
   return (
     <Layout>
       <title>Backups</title>
       <div className="flex flex-col pb-12 mx-auto md:max-w-[1000px] w-3/4">
-
+        <div className="flex flex-col">
+          <Backup/>
+          <Backup/>
+        </div>
       </div>
     </Layout>
   )
