@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { data } from "autoprefixer";
 import Link from "next/link";
 
 export default function TrackedDatabase({ database, index, setUntracked, setTracked, untracked, tracked }) {

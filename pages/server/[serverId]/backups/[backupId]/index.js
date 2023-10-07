@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { getSession } from 'next-auth/react';
 import Layout from '@/components/Layout';
 import Backup from "@/components/pages/server/backups/Backup";
