@@ -9,6 +9,7 @@ const handler = NextAuth({
   providers: [
     Credentials({
       name: 'Credentials',
+      id: 'credentials',
       credentials: {
         email: { label: "Email", type: "text", placeholder: "Username" },
         password: { label: "Password", type: "password" }
@@ -30,6 +31,9 @@ const handler = NextAuth({
       }
     })
   ],
+  pages: {
+    signIn: '/login',
+  }
 })
 
 export default handler;
