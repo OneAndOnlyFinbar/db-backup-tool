@@ -1,10 +1,6 @@
 import { getSession } from 'next-auth/react';
 import Server from '@/lib/db/server';
-const net = require('net');
-
-export let serverCache = {};
-const cacheTTL = 30_000;
-let lastCacheHit = null;
+const { sshConnectionManager } = require('../../../lib/utils/SSHConnectionManager');
 
 export default async (req, res) => {
   const session = await getSession({ req });
@@ -19,48 +15,16 @@ export default async (req, res) => {
     })
   let results = [];
 
-  const connectToServer = (server) => {
-    return new Promise((resolve) => {
-      const client = new net.Socket();
+  if(!sshConnectionManager.initialized)
+    await sshConnectionManager._init(servers);
 
-      client.on('connect', () => {
-        results.push({
-          id: server.id,
-          name: server.name,
-          ip: server.ip,
-          port: server.port,
-          status: 1,
-        });
-        client.destroy();
-        resolve();
-      });
-
-      client.on('error', (err) => {
-        results.push({
-          id: server.id,
-          name: server.name,
-          ip: server.ip,
-          port: server.port,
-          status: 0,
-        });
-        client.destroy();
-        resolve();
-      });
-
-      client.connect({
-        host: server.ip,
-        port: server.port,
-      });
+  for(const server of servers){
+    const connection = sshConnectionManager.connections[server.id];
+    results.push({
+      ...server.dataValues,
+      active: connection ? connection.active : false,
     });
-  };
-
-  if(lastCacheHit && Date.now() - lastCacheHit < cacheTTL)
-    return res.status(200).json(serverCache);
-
-  await Promise.all(servers.map(connectToServer));
-
-  lastCacheHit = Date.now();
-  serverCache = results;
+  }
 
   return res.status(200).json(results);
 }

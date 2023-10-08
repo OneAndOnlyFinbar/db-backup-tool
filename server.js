@@ -1,10 +1,10 @@
+const next = require('next');
 require('dotenv').config({
   path: '.env.local'
 });
 require('./lib/utils/CheckENV')();
 const { createServer } = require('http');
 const { parse } = require('url');
-const next = require('next');
 
 const dev = process.env.STAGE !== 'production';
 const hostname = process.env.HOSTNAME || 'localhost';
@@ -13,7 +13,7 @@ const port = parseInt(process.env.PORT, 10) || 3000;
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
 
-app.prepare().then(() => {
+app.prepare().then(async () => {
   createServer(async (req, res) => {
     try {
       const parsedUrl = parse(req.url, true);

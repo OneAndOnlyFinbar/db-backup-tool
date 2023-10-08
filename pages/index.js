@@ -35,7 +35,7 @@ export default function Servers() {
             <h1 className="font-semibold text-xl">{server.name}</h1>
             <p className="text-sm text-gray-500 mb-1">{server.ip}:{server.port}</p>
             <p className="text-sm text-gray-500">Tracking <span className="font-semibold">3</span> databases</p>
-            <p className="text-sm text-gray-500">Server Status: <span className={server.status ? "text-green-500" : "text-red-500"}>{server.status ? 'Online' : 'Offline'}</span></p>
+            <p className="text-sm text-gray-500">Server Status: <span className={server.active ? "text-green-500" : "text-red-500"}>{server.active ? 'Online' : 'Offline'}</span></p>
             <p className="text-sm text-gray-500">Backup Status: <span className="text-green-500">Backup Completed</span></p>
           </Link>
         ))}
