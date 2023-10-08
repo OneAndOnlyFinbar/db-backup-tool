@@ -18,7 +18,7 @@ export default async (req, res) => {
   if(!sshConnectionManager.initialized)
     await sshConnectionManager._init(servers);
 
-  for(const server of servers){
+  for(const server of (servers || [])){
     const connection = sshConnectionManager.connections[server.id];
     results.push({
       ...server.dataValues,
