@@ -1,5 +1,6 @@
 import { Server, Database } from "@/lib/db";
 import { getSession } from "next-auth/react";
+const { sshConnectionManager } = require('@/lib/utils/SSHConnectionManager');
 
 export default async (req, res) => {
   const session = await getSession({ req });
@@ -24,7 +25,9 @@ export default async (req, res) => {
         }
       });
 
-      return res.status(200).json({ server, databases });
+      const serverOnline = sshConnectionManager.connections[server.id] ? sshConnectionManager.connections[server.id].active : false;
+
+      return res.status(200).json({ server, databases, active: serverOnline });
     }
     case "POST": {
       const { op, data } = JSON.parse(req.body);

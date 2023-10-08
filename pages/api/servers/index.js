@@ -1,6 +1,6 @@
 import { getSession } from 'next-auth/react';
 import Server from '@/lib/db/server';
-const { sshConnectionManager } = require('../../../lib/utils/SSHConnectionManager');
+const { sshConnectionManager } = require('@/lib/utils/SSHConnectionManager');
 
 export default async (req, res) => {
   const session = await getSession({ req });

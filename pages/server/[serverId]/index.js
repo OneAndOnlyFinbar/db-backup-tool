@@ -9,6 +9,7 @@ export default function Server(props) {
   const [untracked, setUntracked] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingError, setLoadingError] = useState(null);
+  const [serverOnline, setServerOnline] = useState(null);
 
   useEffect(() => {
     return () => {
@@ -22,6 +23,7 @@ export default function Server(props) {
           else {
             setTracked(data.databases.filter(db => db.tracked));
             setUntracked(data.databases.filter(db => !db.tracked));
+            setServerOnline(data.active);
           }
           setLoading(false);
         });
@@ -33,6 +35,8 @@ export default function Server(props) {
       <title>Server</title>
       <div className="flex flex-col pb-12 mx-auto md:max-w-[1000px] w-3/4">
         {loading && <h1 className="text-2xl font-light select-none self-center">Loading...</h1>}
+
+        {serverOnline === false && <h1 className="text-red-500 text-2xl font-light select-none self-center w-full bg-red-100 text-center p-2 rounded-md my-2">Server is offline</h1>}
 
         {loadingError && <h1 className="text-red-500 text-2xl font-light select-none self-center">Error loading
           databases: {loadingError}</h1>}
