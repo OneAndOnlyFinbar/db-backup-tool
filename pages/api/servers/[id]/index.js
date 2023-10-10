@@ -1,5 +1,6 @@
 import { Server, Database } from "@/lib/db";
 import { getSession } from "next-auth/react";
+
 const { sshConnectionManager } = require('@/lib/utils/SSHConnectionManager');
 
 export default async (req, res) => {
@@ -19,6 +20,9 @@ export default async (req, res) => {
 
   switch (req.method) {
     case "GET": {
+      if (!sshConnectionManager.initialized)
+        await sshConnectionManager._init(await Server.findAll());
+
       const databases = await Database.findAll({
         where: {
           serverId: server.id
