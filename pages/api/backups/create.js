@@ -4,17 +4,6 @@ import { Server } from "@/lib/db";
 export default async (req, res) => {
   const { serverId, databaseName } = req.body;
 
-  if (!sshConnectionManager.initialized)
-    await sshConnectionManager._init(await Server.findAll());
-
-  const server = sshConnectionManager.connections[serverId];
-
-  if (!server)
-    return res.status(404).json({ error: "Server not found" });
-
-  if (!server.active)
-    return res.status(400).json({ error: "Server is offline/unavailable." });
-
   const DBServer = await Server.findOne({
     where: {
       id: serverId
@@ -24,7 +13,18 @@ export default async (req, res) => {
   if (!DBServer)
     return res.status(404).json({ error: "Server not found" });
 
-  const { client } = server;
+  if (!sshConnectionManager.initialized)
+    await sshConnectionManager._init(await Server.findAll());
+
+  const cachedServer = sshConnectionManager.connections[serverId];
+
+  if (!cachedServer)
+    return res.status(404).json({ error: "Server not found" });
+
+  if (!cachedServer.active)
+    return res.status(400).json({ error: "Server is offline/unavailable." });
+
+  const { client } = cachedServer;
 
   client.exec(`mysqldump -u ${DBServer.mysqlUsername} -p${DBServer.mysqlPassword} ${databaseName} > ${process.env.REMOTE_CHECKOUT_DIRECTORY}/${databaseName}.sql`, (err, stream) => {
     if (err)
