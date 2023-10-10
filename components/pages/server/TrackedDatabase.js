@@ -65,6 +65,22 @@ export default function TrackedDatabase({ database, index, setUntracked, setTrac
       });
   };
 
+  const backupNow = () => {
+    fetch(`/api/backups/create`, {
+      method: "POST",
+      body: JSON.stringify({
+        serverId: database.serverId,
+        databaseName: database.name
+      })
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.error) {
+        } else
+          setError(data.error.toString());
+      });
+  }
+
   return (
     <div className="flex flex-col w-full bg-white rounded-lg p-2 px-5 shadow-sm mt-2" key={index}>
       <h1 className="font-semibold text-xl">{database.name}</h1>
@@ -108,7 +124,7 @@ export default function TrackedDatabase({ database, index, setUntracked, setTrac
         Status: <span className="font-semibold text-red-500">Backup Failed</span></p>
       <div className="h-px bg-gray-200 my-2"></div>
       <div className="flex flex-col md:flex-row items-center gap-x-2 mb-1">
-        <p className="text-gray-500 hover:underline cursor-pointer">Backup Now</p>
+        <p className="text-gray-500 hover:underline cursor-pointer" onClick={backupNow}>Backup Now</p>
         <p className="text-gray-200 select-none hidden md:block">|</p>
         <Link className="text-gray-500 hover:underline cursor-pointer" href={`/server/${database.serverId}/backups/${database.name}`}>View Backups</Link>
         <p className="text-gray-200 select-none hidden md:block">|</p>

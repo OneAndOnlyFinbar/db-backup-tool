@@ -3,7 +3,7 @@ import { Database, Server } from "@/lib/db";
 import * as fs from 'fs';
 
 export default async (req, res) => {
-  const { serverId, databaseName } = req.body;
+  const { serverId, databaseName } = JSON.parse(req.body);
 
   const DBServer = await Server.findOne({
     where: {
@@ -16,7 +16,7 @@ export default async (req, res) => {
 
   const DBDatabase = await Database.findOne({
     where: {
-      serverId: DBServer.id,
+      serverId,
       name: databaseName
     }
   });
