@@ -1,5 +1,5 @@
 import { sshConnectionManager } from "@/lib/utils/SSHConnectionManager";
-import { Server } from "@/lib/db";
+import { Database, Server } from "@/lib/db";
 
 export default async (req, res) => {
   const { serverId, databaseName } = req.body;
@@ -12,6 +12,19 @@ export default async (req, res) => {
 
   if (!DBServer)
     return res.status(404).json({ error: "Server not found" });
+
+  const DBDatabase = await Database.findOne({
+    where: {
+      serverId: DBServer.id,
+      name: databaseName
+    }
+  });
+
+  if (!DBDatabase)
+    return res.status(404).json({ error: "Database not found" });
+
+  if(!DBDatabase.tracked)
+    return res.status(400).json({ error: "Database is not being tracked" });
 
   if (!sshConnectionManager.initialized)
     await sshConnectionManager._init(await Server.findAll());
