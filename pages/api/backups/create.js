@@ -1,5 +1,6 @@
 import { sshConnectionManager } from "@/lib/utils/SSHConnectionManager";
-import { Database, Server } from "@/lib/db";
+import { Database, Server, Backup } from "@/lib/db";
+import { v4 as uuid } from "uuid";
 import * as fs from 'fs';
 
 export default async (req, res) => {
@@ -98,7 +99,17 @@ export default async (req, res) => {
   if(!fs.existsSync(process.env.LOCAL_STORAGE_DIRECTORY))
     fs.mkdirSync(process.env.LOCAL_STORAGE_DIRECTORY);
 
-  fs.writeFileSync(`${process.env.LOCAL_STORAGE_DIRECTORY}/${databaseName}.sql`, response);
+  const id = uuid();
+
+  await Backup.create({
+    id,
+    serverId,
+    db: databaseName,
+    date: new Date().toISOString(),
+    deleteAfter: Date.now() + [1000, 60000, 3600000, 86400000, 604800000, 2592000000][['second', 'minute', 'hour', 'day', 'week', 'month'].indexOf(DBDatabase.retentionPeriodUnit)] * DBDatabase.retentionPeriod
+  })
+
+  fs.writeFileSync(`${process.env.LOCAL_STORAGE_DIRECTORY}/${id}.sql`, response);
 
   return res.status(200).json({ success: true });
 }

@@ -8,6 +8,7 @@ export default function TrackedDatabase({ database, index, setUntracked, setTrac
   const [frequency, setFrequency] = useState(database.backupFrequency);
   const [frequencyUnit, setFrequencyUnit] = useState(database.backupFrequencyUnit);
   const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
 
   const unTrack = () => {
     fetch(`/api/servers/${database.serverId}`, {
@@ -76,8 +77,12 @@ export default function TrackedDatabase({ database, index, setUntracked, setTrac
       .then((res) => res.json())
       .then((data) => {
         if (!data.error) {
-        } else
+          setError(null);
+          setMessage("Backup Success!");
+        } else {
           setError(data.error.toString());
+          setMessage(null)
+        }
       });
   }
 
@@ -133,6 +138,7 @@ export default function TrackedDatabase({ database, index, setUntracked, setTrac
         <p className="text-red-500 hover:underline cursor-pointer" onClick={unTrack}>Untrack</p>
       </div>
       {error && <p className="text-red-500 text-sm">{error}</p>}
+      {message && <p className="text-green-500 text-sm">{message}</p>}
     </div>
   );
 }
