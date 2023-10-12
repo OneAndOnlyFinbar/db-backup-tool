@@ -10,23 +10,23 @@ export default function Server(props) {
   const [loading, setLoading] = useState(true);
   const [loadingError, setLoadingError] = useState(null);
   const [serverOnline, setServerOnline] = useState(null);
+  const [raw, setRaw] = useState(null);
 
   useEffect(() => {
     return () => {
       fetch(`/api/servers/${props.serverId}`, {
         method: 'GET'
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error)
-            setLoadingError(data.error);
-          else {
-            setTracked(data.databases.filter(db => db.tracked));
-            setUntracked(data.databases.filter(db => !db.tracked));
-            setServerOnline(data.active);
-          }
-          setLoading(false);
-        });
+      }).then((res) => res.json()).then((data) => {
+        if (data.error)
+          setLoadingError(data.error);
+        else {
+          setTracked(data.databases.filter(db => db.tracked));
+          setUntracked(data.databases.filter(db => !db.tracked));
+          setServerOnline(data.active);
+          setRaw(data);
+        }
+        setLoading(false);
+      });
     };
   }, []);
 
@@ -34,9 +34,19 @@ export default function Server(props) {
     <Layout>
       <title>Server</title>
       <div className="flex flex-col pb-12 mx-auto md:max-w-[1000px] w-3/4">
+        <div className="flex flex-col mb-4 w-full bg-white rounded-lg p-2 px-5 shadow-sm mt-2">
+          <h1 className="font-semibold text-xl">Server Information</h1>
+          <p className="text-gray-500 text-sm">Server Name: {raw?.server.name}</p>
+          <p className="text-gray-500 text-sm">Server ID: {props.serverId}</p>
+          <p className="text-gray-500 text-sm">Server IP: {raw?.server.ip}</p>
+          <p className="text-gray-500 text-sm">Server Port: {raw?.server.port}</p>
+        </div>
+
         {loading && <h1 className="text-2xl font-light select-none self-center">Loading...</h1>}
 
-        {serverOnline === false && <h1 className="text-red-500 text-2xl font-light select-none self-center w-full bg-red-100 text-center p-2 rounded-md my-2">Server is offline</h1>}
+        {serverOnline === false && <h1
+          className="text-red-500 text-2xl font-light select-none self-center w-full bg-red-100 text-center p-2 rounded-md my-2">Server
+          is offline</h1>}
 
         {loadingError && <h1 className="text-red-500 text-2xl font-light select-none self-center">Error loading
           databases: {loadingError}</h1>}
@@ -46,7 +56,8 @@ export default function Server(props) {
             <h1 className="text-2xl font-light select-none">Tracked Databases</h1>
 
             {tracked.map((database, index) => (
-              <TrackedDatabase database={database} index={index} key={index} setTracked={setTracked} setUntracked={setUntracked} tracked={tracked} untracked={untracked}/>
+              <TrackedDatabase database={database} index={index} key={index} setTracked={setTracked}
+                               setUntracked={setUntracked} tracked={tracked} untracked={untracked}/>
             ))}
           </>
         )}
@@ -56,7 +67,8 @@ export default function Server(props) {
             <h1 className="text-2xl font-light select-none mt-4">Untracked Databases</h1>
 
             {untracked.map((database, index) => (
-              <UntrackedDatabase database={database} index={index} key={index} setTracked={setTracked} setUntracked={setUntracked} tracked={tracked} untracked={untracked}/>
+              <UntrackedDatabase database={database} index={index} key={index} setTracked={setTracked}
+                                 setUntracked={setUntracked} tracked={tracked} untracked={untracked}/>
             ))}
           </>
         )}
