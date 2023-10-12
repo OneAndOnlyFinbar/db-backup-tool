@@ -1,6 +1,6 @@
 export default function Backup(props) {
   return (
-    <div className="bg-white rounded-md py-3 px-6 m-2">
+    <div className="bg-white rounded-md py-3 px-6">
       <h1 className="text-xl">{new Date().toLocaleDateString()}</h1>
 
       <p className="text-gray-500 text-sm">3 Hours ago</p>

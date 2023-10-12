@@ -27,7 +27,8 @@ export default function Backups(props) {
     <Layout>
       <title>Backups</title>
       <div className="flex flex-col pb-12 mx-auto md:max-w-[1000px] w-3/4">
-        <div className="flex flex-col">
+        <h1 className="text-2xl font-light select-none my-2">Backups for {props.databaseName}</h1>
+        <div className="flex flex-col gap-y-4">
           {backups.map(backup => <Backup/>)}
         </div>
       </div>
