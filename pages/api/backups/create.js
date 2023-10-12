@@ -41,77 +41,91 @@ export default async (req, res) => {
 
   const { client } = cachedServer;
 
-  await new Promise((resolve) => {
-    client.exec(`mkdir -p ${process.env.REMOTE_CHECKOUT_DIRECTORY}`, (err, stream) => {
-      if (err)
-        return res.status(400).json({ error: err });
+  try {
+    await new Promise((resolve) => {
+      client.exec(`mkdir -p ${process.env.REMOTE_CHECKOUT_DIRECTORY}`, (err, stream) => {
+        if (err)
+          throw new Error(err);
 
-      stream.on('close', (code, signal) => {
-        if (code === 0)
-          return resolve();
+        stream.on('close', (code, signal) => {
+          if (code !== 0)
+            throw new Error(`Process exited with code ${code}`);
 
-        return res.status(400).json({ error: `Process exited with code ${code}` });
-      }).on('data', (data) => {
-        console.log(data.toString());
-      }).stderr.on('data', (data) => {
-        console.log(data.toString());
+          resolve();
+        }).on('data', (data) => {
+          console.log(data.toString());
+        }).stderr.on('data', (data) => {
+          console.log(data.toString());
+        });
       });
+    })
+
+    await new Promise((resolve) => {
+      client.exec(`mysqldump -u ${DBServer.mysqlUsername} -p${DBServer.mysqlPassword} ${databaseName} > ${process.env.REMOTE_CHECKOUT_DIRECTORY}/${databaseName}.sql`, (err, stream) => {
+        if (err)
+          throw new Error(err);
+
+        stream.on('close', (code, signal) => {
+          if (code !== 0)
+            throw new Error(`Process exited with code ${code}`);
+
+          resolve();
+        }).on('data', (data) => {
+          console.log(data.toString());
+        }).stderr.on('data', (data) => {
+          console.log(data.toString());
+        });
+      })
+    })
+
+    let response = '';
+    await new Promise((resolve) => {
+      client.exec(`cat ${process.env.REMOTE_CHECKOUT_DIRECTORY}/${databaseName}.sql`, (err, stream) => {
+        if (err)
+          throw new Error(err);
+
+        stream.on('close', (code, signal) => {
+          if (code !== 0)
+            throw new Error(`Process exited with code ${code}`);
+
+          resolve();
+        }).on('data', (data) => {
+          response += data.toString();
+        }).stderr.on('data', (data) => {
+          console.log(data.toString());
+        });
+      })
+    })
+
+    if (!fs.existsSync(process.env.LOCAL_STORAGE_DIRECTORY))
+      fs.mkdirSync(process.env.LOCAL_STORAGE_DIRECTORY);
+
+    const id = uuid();
+
+    await Backup.create({
+      id,
+      serverId,
+      db: databaseName,
+      date: new Date().toISOString(),
+      deleteAfter: Date.now() + [1000, 60000, 3600000, 86400000, 604800000, 2592000000][['second', 'minute', 'hour', 'day', 'week', 'month'].indexOf(DBDatabase.retentionPeriodUnit)] * DBDatabase.retentionPeriod,
+      size: response.length,
+      status: 1
+    })
+
+    fs.writeFileSync(`${process.env.LOCAL_STORAGE_DIRECTORY}/${id}.sql`, response);
+
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    await Backup.create({
+      id: uuid(),
+      serverId,
+      db: databaseName,
+      date: new Date().toISOString(),
+      deleteAfter: Date.now() + [1000, 60000, 3600000, 86400000, 604800000, 2592000000][['second', 'minute', 'hour', 'day', 'week', 'month'].indexOf(DBDatabase.retentionPeriodUnit)] * DBDatabase.retentionPeriod,
+      size: 0,
+      status: 0
     });
-  })
 
-  await new Promise((resolve) => {
-    client.exec(`mysqldump -u ${DBServer.mysqlUsername} -p${DBServer.mysqlPassword} ${databaseName} > ${process.env.REMOTE_CHECKOUT_DIRECTORY}/${databaseName}.sql`, (err, stream) => {
-      if (err)
-        return res.status(400).json({ error: err });
-
-      stream.on('close', (code, signal) => {
-        if (code === 0)
-          return resolve();
-
-        return res.status(400).json({ error: `Process exited with code ${code}` });
-      }).on('data', (data) => {
-        console.log(data.toString());
-      }).stderr.on('data', (data) => {
-        console.log(data.toString());
-      });
-    })
-  })
-
-  let response = '';
-  await new Promise((resolve) => {
-    client.exec(`cat ${process.env.REMOTE_CHECKOUT_DIRECTORY}/${databaseName}.sql`, (err, stream) => {
-      if (err)
-        return res.status(400).json({ error: err });
-
-      stream.on('close', (code, signal) => {
-        if (code === 0)
-          return resolve();
-
-        return res.status(400).json({ error: `Process exited with code ${code}` });
-      }).on('data', (data) => {
-        response += data.toString();
-      }).stderr.on('data', (data) => {
-        console.log(data.toString());
-      });
-    })
-  })
-
-  if(!fs.existsSync(process.env.LOCAL_STORAGE_DIRECTORY))
-    fs.mkdirSync(process.env.LOCAL_STORAGE_DIRECTORY);
-
-  const id = uuid();
-
-  await Backup.create({
-    id,
-    serverId,
-    db: databaseName,
-    date: new Date().toISOString(),
-    deleteAfter: Date.now() + [1000, 60000, 3600000, 86400000, 604800000, 2592000000][['second', 'minute', 'hour', 'day', 'week', 'month'].indexOf(DBDatabase.retentionPeriodUnit)] * DBDatabase.retentionPeriod,
-    size: response.length,
-    status: 0
-  })
-
-  fs.writeFileSync(`${process.env.LOCAL_STORAGE_DIRECTORY}/${id}.sql`, response);
-
-  return res.status(200).json({ success: true });
+    return res.status(400).json({ error: error.message });
+  }
 }
