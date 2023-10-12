@@ -1,10 +1,10 @@
-export default function Backup(props) {
+export default function Backup({data}) {
   return (
     <div className="bg-white rounded-md py-3 px-6">
       <h1 className="text-xl">{new Date().toLocaleDateString()}</h1>
 
       <p className="text-gray-500 text-sm">3 Hours ago</p>
-      <p className="text-gray-500 text-sm">Backup size: 1.2 GB</p>
+      <p className="text-gray-500 text-sm">Backup size: {data.size}</p>
       <p className="text-sm text-gray-500">Backup Status: <span className="font-semibold text-green-500">Completed</span>
       </p>
       <p className="text-sm text-gray-500">Backup Status: <span className="font-semibold text-yellow-600">Running...</span>

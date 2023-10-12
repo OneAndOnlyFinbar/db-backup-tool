@@ -106,7 +106,9 @@ export default async (req, res) => {
     serverId,
     db: databaseName,
     date: new Date().toISOString(),
-    deleteAfter: Date.now() + [1000, 60000, 3600000, 86400000, 604800000, 2592000000][['second', 'minute', 'hour', 'day', 'week', 'month'].indexOf(DBDatabase.retentionPeriodUnit)] * DBDatabase.retentionPeriod
+    deleteAfter: Date.now() + [1000, 60000, 3600000, 86400000, 604800000, 2592000000][['second', 'minute', 'hour', 'day', 'week', 'month'].indexOf(DBDatabase.retentionPeriodUnit)] * DBDatabase.retentionPeriod,
+    size: response.length,
+    status: 0
   })
 
   fs.writeFileSync(`${process.env.LOCAL_STORAGE_DIRECTORY}/${id}.sql`, response);
