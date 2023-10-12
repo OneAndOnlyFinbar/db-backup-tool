@@ -131,7 +131,7 @@ export default function TrackedDatabase({ database, index, setUntracked, setTrac
       <div className="flex flex-col md:flex-row items-center gap-x-2 mb-1">
         <p className="text-gray-500 hover:underline cursor-pointer" onClick={backupNow}>Backup Now</p>
         <p className="text-gray-200 select-none hidden md:block">|</p>
-        <Link className="text-gray-500 hover:underline cursor-pointer" href={`/server/${database.serverId}/backups/${database.name}`}>View Backups</Link>
+        <Link className="text-gray-500 hover:underline cursor-pointer" href={`/server/${database.serverId}/${database.name}`}>View Backups</Link>
         <p className="text-gray-200 select-none hidden md:block">|</p>
         <p className="text-gray-500 hover:underline cursor-pointer" onClick={() => editing ? save() : setEditing(!editing)}>{editing ? "Save" : "Edit"}</p>
         <p className="text-gray-200 select-none hidden md:block">|</p>
