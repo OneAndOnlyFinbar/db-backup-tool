@@ -34,7 +34,7 @@ export default function Servers() {
           <Link href={`/server/${server.id}`} className="flex flex-col w-4/5 bg-white rounded-lg p-2 px-5 shadow-sm hover:shadow-md transition duration-200 ease-in-out">
             <h1 className="font-semibold text-xl">{server.name}</h1>
             <p className="text-sm text-gray-500 mb-1">{server.ip}:{server.port}</p>
-            <p className="text-sm text-gray-500">Tracking <span className="font-semibold">3</span> databases</p>
+            <p className="text-sm text-gray-500">Tracking <span className="font-semibold">{server.databases.filter(db => db.tracked).length}/{server.databases.length}</span> databases</p>
             <p className="text-sm text-gray-500">Server Status: <span className={server.active ? "text-green-500" : "text-red-500"}>{server.active ? 'Online' : 'Offline'}</span></p>
             <p className="text-sm text-gray-500">Backup Status: <span className="text-green-500">Backup Completed</span></p>
           </Link>

@@ -1,5 +1,5 @@
 import { getSession } from 'next-auth/react';
-import Server from '@/lib/db/server';
+import { Server, Database } from '@/lib/db';
 const { sshConnectionManager } = require('@/lib/utils/SSHConnectionManager');
 
 export default async (req, res) => {
@@ -8,7 +8,12 @@ export default async (req, res) => {
   if (!session)
     return res.status(401).json({ error: 'Unauthorized' });
 
-  const servers = await Server.findAll()
+  const servers = await Server.findAll({
+    include: {
+      model: Database,
+      as: 'databases',
+    }
+  })
     .catch((err) => {
       console.log(err);
       return res.status(500).json({ error: 'Internal database error' });
