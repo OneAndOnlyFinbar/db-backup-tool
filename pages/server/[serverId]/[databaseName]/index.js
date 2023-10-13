@@ -29,6 +29,7 @@ export default function Backups(props) {
       <div className="flex flex-col pb-12 mx-auto md:max-w-[1000px] w-3/4">
         <h1 className="text-2xl font-light select-none my-2">Backups for {props.databaseName}</h1>
         <div className="flex flex-col gap-y-4">
+          {!backups.length && <p className="text-center">No backups found.</p>}
           {backups.map(backup => <Backup data={backup}/>)}
         </div>
       </div>

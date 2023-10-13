@@ -57,7 +57,8 @@ export default function Server(props) {
 
             {tracked.map((database, index) => (
               <TrackedDatabase database={database} index={index} key={index} setTracked={setTracked}
-                               setUntracked={setUntracked} tracked={tracked} untracked={untracked}/>
+                               setUntracked={setUntracked} tracked={tracked} untracked={untracked}
+                               serverOnline={serverOnline}/>
             ))}
           </>
         )}
