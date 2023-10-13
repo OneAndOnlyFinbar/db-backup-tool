@@ -1,5 +1,6 @@
-import { Server, Database } from "@/lib/db";
+import { Server, Database, Backup } from "@/lib/db";
 import { getSession } from "next-auth/react";
+import { Op } from "sequelize";
 
 const { sshConnectionManager } = require('@/lib/utils/SSHConnectionManager');
 
@@ -26,6 +27,17 @@ export default async (req, res) => {
       const databases = await Database.findAll({
         where: {
           serverId: server.id
+        },
+        include: {
+          model: Backup,
+          as: "backups",
+          attributes: ["id"],
+          where: {
+            db: {
+              [Op.col]: "Database.name"
+            }
+          },
+          required: false
         }
       });
 

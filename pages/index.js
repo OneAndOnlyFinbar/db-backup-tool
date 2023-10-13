@@ -22,7 +22,6 @@ export default function Servers() {
     };
   }, []);
 
-
   return (
     <Layout>
       <title>Database Servers</title>
