@@ -121,13 +121,8 @@ export default function TrackedDatabase({ database, index, setUntracked, setTrac
         :
         <span className="font-semibold">every {frequency != 1 && frequency} {frequencyUnit}{frequency != 1 && "s"}</span>
       }</p>
-      <p className="text-sm text-gray-500">Last backup: <span className="font-semibold">{new Date(lastBackup.date).toLocaleDateString()} at {new Date(lastBackup.date).toLocaleTimeString()}</span></p>
-      <p className="text-sm text-gray-500">Current Status: <span className="font-semibold text-green-500">Backup Completed</span>
-      </p>
-      <p className="text-sm text-gray-500">Current Status: <span className="font-semibold text-yellow-600">Running backup</span>
-      </p>
-      <p className="text-sm text-gray-500">Current
-        Status: <span className="font-semibold text-red-500">Backup Failed</span></p>
+      <p className="text-sm text-gray-500">Last backup: <span className="font-semibold">{lastBackup?.date ? `${new Date(lastBackup.date).toLocaleDateString()} at ${new Date(lastBackup.date).toLocaleTimeString()}` : "None"}</span></p>
+      <p className="text-sm text-gray-500">Current Status: <span className={`font-semibold ${lastBackup?.status ? "text-green-500" : lastBackup?.status === 0 && "text-red-500"}`}>{lastBackup?.status ? "Success" : lastBackup?.status === 0 ? "Failed" : "None"}</span></p>
       <div className="h-px bg-gray-200 my-2"></div>
       <div className="flex flex-col md:flex-row items-center gap-x-2 mb-1">
         <p className="text-gray-500 hover:underline cursor-pointer" onClick={backupNow}>Backup Now</p>
