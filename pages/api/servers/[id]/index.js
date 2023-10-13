@@ -31,7 +31,7 @@ export default async (req, res) => {
         include: {
           model: Backup,
           as: "backups",
-          attributes: ["id"],
+          attributes: ["id", "date", "status"],
           where: {
             db: {
               [Op.col]: "Database.name"

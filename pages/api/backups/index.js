@@ -20,7 +20,8 @@ export default async (req, res) => {
     where: {
       serverId,
       db: databaseName
-    }
+    },
+    attributes: ['id', 'serverId', 'db', 'date', 'deleteAfter', 'size', 'status']
   });
 
   return res.status(200).json(backups);

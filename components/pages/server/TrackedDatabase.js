@@ -9,6 +9,7 @@ export default function TrackedDatabase({ database, index, setUntracked, setTrac
   const [frequencyUnit, setFrequencyUnit] = useState(database.backupFrequencyUnit);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
+  const lastBackup = database.backups.sort((a, b) => new Date(b.date) - new Date(a.date))[0];
 
   const unTrack = () => {
     fetch(`/api/servers/${database.serverId}`, {
@@ -120,7 +121,7 @@ export default function TrackedDatabase({ database, index, setUntracked, setTrac
         :
         <span className="font-semibold">every {frequency != 1 && frequency} {frequencyUnit}{frequency != 1 && "s"}</span>
       }</p>
-      <p className="text-sm text-gray-500">Last backup: <span className="font-semibold">1 hour ago</span></p>
+      <p className="text-sm text-gray-500">Last backup: <span className="font-semibold">{new Date(lastBackup.date).toLocaleDateString()} at {new Date(lastBackup.date).toLocaleTimeString()}</span></p>
       <p className="text-sm text-gray-500">Current Status: <span className="font-semibold text-green-500">Backup Completed</span>
       </p>
       <p className="text-sm text-gray-500">Current Status: <span className="font-semibold text-yellow-600">Running backup</span>
