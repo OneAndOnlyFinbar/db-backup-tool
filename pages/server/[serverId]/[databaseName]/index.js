@@ -1,6 +1,6 @@
 import { getSession } from 'next-auth/react';
 import Layout from '@/components/Layout';
-import Backup from "@/components/pages/server/backups/Backup";
+import Backup from "@/components/pages/backups/Backup";
 import { useEffect, useState } from "react";
 
 export default function Backups(props) {
