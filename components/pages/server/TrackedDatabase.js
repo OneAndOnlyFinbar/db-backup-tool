@@ -122,7 +122,7 @@ export default function TrackedDatabase({ database, index, setUntracked, setTrac
         <span className="font-semibold">every {frequency != 1 && frequency} {frequencyUnit}{frequency != 1 && "s"}</span>
       }</p>
       <p className="text-sm text-gray-500">Last backup: <span className="font-semibold">{lastBackup?.date ? `${new Date(lastBackup.date).toLocaleDateString()} at ${new Date(lastBackup.date).toLocaleTimeString()}` : "None"}</span></p>
-      <p className="text-sm text-gray-500">Current Status: <span className={`font-semibold ${lastBackup?.status ? "text-green-500" : lastBackup?.status === 0 && "text-red-500"}`}>{lastBackup?.status ? "Success" : lastBackup?.status === 0 ? "Failed" : "None"}</span></p>
+      <p className="text-sm text-gray-500">Last Backup Status: <span className={`font-semibold ${lastBackup?.status ? "text-green-500" : lastBackup?.status === 0 && "text-red-500"}`}>{lastBackup?.status ? "Success" : lastBackup?.status === 0 ? "Failed" : "None"}</span></p>
       <div className="h-px bg-gray-200 my-2"></div>
       <div className="flex flex-col md:flex-row items-center gap-x-2 mb-1">
         <button className="text-gray-500 hover:underline cursor-pointer disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:no-underline" onClick={backupNow} disabled={!serverOnline}>Backup Now</button>
