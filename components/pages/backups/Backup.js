@@ -45,7 +45,7 @@ export default function Backup({ data }) {
         <p className="text-gray-200 select-none hidden md:block">|</p>
         <p className="text-gray-500 hover:underline cursor-pointer">Download Backup</p>
         <p className="text-gray-200 select-none hidden md:block">|</p>
-        <p className="text-gray-500 hover:underline cursor-pointer text-red-500">Delete Backup</p>
+        <p className="hover:underline cursor-pointer text-red-500">Delete Backup</p>
       </div>
     </div>
   )
