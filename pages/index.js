@@ -38,7 +38,7 @@ export default function Servers() {
             <p className="text-sm text-gray-500">Backup Status: <span className="text-green-500">Backup Completed</span></p>
           </Link>
         ))}
-        <Link href="/server/add" className="flex flex-col w-3/4 bg-white rounded-lg p-2 px-5 shadow-sm hover:shadow-md transition duration-200 ease-in-out">
+        <Link href="/server/add" className="flex flex-col w-4/5 bg-white rounded-lg p-2 px-5 shadow-sm hover:shadow-md transition duration-200 ease-in-out">
           <h1 className="font-light text-xl text-center">Add Server</h1>
         </Link>
       </div>
