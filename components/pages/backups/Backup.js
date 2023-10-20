@@ -1,6 +1,6 @@
 import { formatDurationRelative, bytesToSize } from "lib/utils/Functions";
 
-export default function Backup({ data }) {
+export default function Backup({ data, ...props }) {
   const download = () => {
     fetch(`/api/backups/${data.id}/download`, {
       method: 'GET',
@@ -17,6 +17,20 @@ export default function Backup({ data }) {
       a.remove();
     });
   }
+
+  const del = () => {
+    fetch(`/api/backups/${data.id}/delete`, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    }).then(res => res.json()).then(json => {
+      if(json.error)
+        return alert(json.error);
+
+      props.setBackups(prev => prev.filter(b => b.id !== data.id));
+    });
+  }
+
   return (
     <div className="bg-white rounded-md py-3 px-6">
       <h1 className="text-xl">{new Date(data.date).toLocaleDateString()}</h1>
@@ -32,7 +46,7 @@ export default function Backup({ data }) {
         <p className="text-gray-200 select-none hidden md:block">|</p>
         <p className="text-gray-500 hover:underline cursor-pointer" onClick={download}>Download Backup</p>
         <p className="text-gray-200 select-none hidden md:block">|</p>
-        <p className="hover:underline cursor-pointer text-red-500">Delete Backup</p>
+        <p className="hover:underline cursor-pointer text-red-500" onClick={del}>Delete Backup</p>
       </div>
     </div>
   )

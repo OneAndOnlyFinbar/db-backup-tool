@@ -30,7 +30,7 @@ export default function Backups(props) {
         <h1 className="text-2xl font-light select-none my-2">Backups for {props.databaseName}</h1>
         <div className="flex flex-col gap-y-4">
           {!backups.length && <p className="text-center">No backups found.</p>}
-          {backups.map(backup => <Backup data={backup}/>)}
+          {backups.map(backup => <Backup data={backup} setBackups={setBackups} key={backup.id} />)}
         </div>
       </div>
     </Layout>
