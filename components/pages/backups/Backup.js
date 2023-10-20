@@ -1,6 +1,22 @@
 import { formatDurationRelative, bytesToSize } from "lib/utils/Functions";
 
 export default function Backup({ data }) {
+  const download = () => {
+    fetch(`/api/backups/${data.id}/download`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    }).then(res => res.blob()).then(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${data.id}.sql`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    });
+  }
   return (
     <div className="bg-white rounded-md py-3 px-6">
       <h1 className="text-xl">{new Date(data.date).toLocaleDateString()}</h1>
@@ -14,7 +30,7 @@ export default function Backup({ data }) {
       <div className="flex flex-col md:flex-row items-center gap-x-2 mb-1">
         <p className="text-gray-500 hover:underline cursor-pointer">View Logs</p>
         <p className="text-gray-200 select-none hidden md:block">|</p>
-        <p className="text-gray-500 hover:underline cursor-pointer">Download Backup</p>
+        <p className="text-gray-500 hover:underline cursor-pointer" onClick={download}>Download Backup</p>
         <p className="text-gray-200 select-none hidden md:block">|</p>
         <p className="hover:underline cursor-pointer text-red-500">Delete Backup</p>
       </div>

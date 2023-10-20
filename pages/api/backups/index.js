@@ -9,7 +9,6 @@ export default async (req, res) => {
 
   const { serverId, databaseName } = req.body;
 
-
   if (!serverId && serverId !== 0)
     return res.status(400).json({ error: 'Missing serverId' });
 
